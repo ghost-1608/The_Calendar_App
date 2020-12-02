@@ -36,17 +36,6 @@ if 'labeled_entries' in d.keys():
 
         y += b_y
 
-btn = [{'label': 'OK', 'x': d['width'] - 120, 'y': d['height'] - 30, 'command': 'b_ok'},
-       {'label': 'Cancel', 'x': d['width'] - 70, 'y': d['height'] - 30, 'command': 'b_cancel'}]
-
-if 'buttons' in d.keys():
-    btn += d['buttons']
-
-for i in range(len(btn)):
-    b += [tkinter.Button(canvas, text=btn[i]['label'], command=btn[i]['command'])]
-
-    b[i].place(x=btn[i]['x'], y=btn[i]['y'])
-
 if 'win_title' in d.keys():
     root.title(d['win_title'])
 

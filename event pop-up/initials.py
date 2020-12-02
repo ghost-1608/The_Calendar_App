@@ -6,3 +6,5 @@ with open('config.ini') as f:
 root = tkinter.Tk()
 root.geometry(str(d['width']) + 'x' + str(d['height']))
 canvas = tkinter.Canvas(root, width=d['width'], height=d['height'])
+
+width, height = d['width'], d['height']
