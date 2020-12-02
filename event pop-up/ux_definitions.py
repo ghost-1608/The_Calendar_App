@@ -2,9 +2,10 @@ from ui_definitions import *
 
 
 def b_ok(event=None):
-    global e
+    global entries
 
-    print(e[0].get())
+    for i in range(len(l)):
+        print(entries[i]['label'], entries[i]['response'].get(), sep=': ')
 
     root.destroy()
 

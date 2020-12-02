@@ -36,6 +36,11 @@ if 'labeled_entries' in d.keys():
 
         y += b_y
 
+    entries = []
+
+    for i in range(len(l)):
+        entries += [{'label': d['labeled_entries'][i], 'response': e[i]}]
+
 if 'win_title' in d.keys():
     root.title(d['win_title'])
 
