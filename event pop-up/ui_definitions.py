@@ -1,8 +1,5 @@
 from initials import *
 
-with open('config.ini') as f:
-    d = eval(f.read())
-
 l, e, b = [], [], []
 
 if 'labeled_entries' in d.keys():
