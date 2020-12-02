@@ -8,4 +8,4 @@ def b_ok():
 
 
 def b_cancel():
-    pass
+    root.destroy()
