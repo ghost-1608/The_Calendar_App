@@ -39,4 +39,7 @@ if 'labeled_entries' in d.keys():
 if 'win_title' in d.keys():
     root.title(d['win_title'])
 
+if 'win_icon' in d.keys():
+    root.iconphoto(False, tkinter.PhotoImage(d['win_icon']))
+
 canvas.pack()

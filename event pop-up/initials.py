@@ -8,3 +8,5 @@ root.geometry(str(d['width']) + 'x' + str(d['height']))
 canvas = tkinter.Canvas(root, width=d['width'], height=d['height'])
 
 width, height = d['width'], d['height']
+
+root.resizable(False, False)
