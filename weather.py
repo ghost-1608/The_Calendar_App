@@ -30,10 +30,10 @@ CITY='chennai'
 
 #api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 #d1f00b521eb58c2a2721dfefacc66c3a
+
+
 def change(city):
-    global CITY
-    CITY=city
-    get_weather(CITY)
+    get_weather(city.lower())
 
 def city_select():
     win=tk.Tk(screenName='select city')
@@ -42,7 +42,7 @@ def city_select():
     entry=tk.Entry(win)
     entry.place(relx=0.1,rely=0.4,relwidth=0.7,relheight=0.2)
 
-    confirm=tk.Button(win,text='confirm',command=lambda:change(entry['text']))
+    confirm=tk.Button(win,text='confirm',command=lambda:change(entry.get()))
     confirm.place(relx=0.8,rely=0.4,relwidth=0.2,relheight=0.2)
 
     win.mainloop()
@@ -79,4 +79,3 @@ get_weather(CITY)
 
 
 win.mainloop()
-
