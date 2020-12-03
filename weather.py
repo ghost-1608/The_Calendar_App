@@ -28,7 +28,6 @@ CITY='chennai'
 }
 '''
 
-
 #api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 #d1f00b521eb58c2a2721dfefacc66c3a
 
@@ -55,6 +54,7 @@ def get_weather(city):
     response=requests.get(url, params=parameters)
     response=response.json()
     label_w['text']=str(response['weather'][0]['description'])+'\n'+'temp:'+str(response['main']['temp'])+'\n'+'feels like:'+str(response['main']['feels_like'])
+    select_city.tkraise()
     
     
 
@@ -68,11 +68,14 @@ canvas.pack()
 weather=tk.Frame(win,bg='#CBCDCB')
 weather.place(relx=0.02,rely=0.02,relheight=0.96,relwidth=0.96)
 
+select_city=tk.Button(weather,text='select city',command=lambda:city_select())
+select_city.place(relx=0.8,rely=0.8,relwidth=0.2,relheight=0.2)
+
 label_w=tk.Label(weather,font=('lucida console',20,"bold"),fg="#607D86",bg='#CBCDCB')
 label_w.place(relheight=1,relwidth=1)
 
-select_city=tk.Button(label_w,text='select city',command=lambda:city_select())
-select_city.place(relx=0.8,rely=0.8,relwidth=0.2,relheight=0.2)
+
+
 
 
 
