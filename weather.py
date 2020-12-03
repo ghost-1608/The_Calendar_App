@@ -28,6 +28,7 @@ CITY='chennai'
 }
 '''
 
+
 #api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 #d1f00b521eb58c2a2721dfefacc66c3a
 
