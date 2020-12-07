@@ -6,7 +6,7 @@ from tkinter import ttk
 def return_handle(event):
     global days
 
-    for i in [e, c, de, m]:
+    for i in [e, c, d, m]:
         if root.focus_get() in i:
             break
 
@@ -15,7 +15,7 @@ def return_handle(event):
     if i == c:
         if c[-1].get() and c[-1].get() not in days:
             c[-1].set('')
-    if i == de:
+    if i == d:
         pass
     if i == m:
         pass
@@ -67,7 +67,7 @@ for i in l:
 y = Y; x += b_x
 
 for i in e:
-    i.place(x=x, y=y)
+    i.place(x=x, y=y + 2)
     y += b_y
 
 for i in c:
@@ -75,11 +75,11 @@ for i in c:
     y += b_y
 
 for i in d:
-    i.place(x=x, y=y)
+    i.place(x=x - 2, y=y - 5)
     y += b_y
 
 for i in m:
-    i.place(x=x, y=y)
+    i.place(x=x, y=y + 2)
     y += b_y
 
 if 'win_title' in de.keys():
