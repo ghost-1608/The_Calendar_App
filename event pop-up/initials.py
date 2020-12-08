@@ -7,7 +7,7 @@ bg = '#d5d5d5'
 
 root = tkinter.Tk()
 root.geometry(str(de['width']) + 'x' + str(de['height']))
-canvas = tkinter.Canvas(root, width=de['width'], height=de['height'])
+canvas = tkinter.Canvas(root, width=de['width'], height=de['height'], highlightthickness=False)
 
 width, height = de['width'], de['height']
 
