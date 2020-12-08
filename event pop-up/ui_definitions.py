@@ -3,6 +3,13 @@ import tkinter.scrolledtext
 from tkinter import ttk
 
 
+def drop(p, q, r):
+    global c, iter
+
+    print(iter)
+    c[0][iter].event_generate('<Down>')
+
+
 def return_handle(event):
     global days
 
@@ -35,10 +42,10 @@ tags = {'label': tkinter.Label(canvas, text='Tags: '), 'entry': tkinter.Entry(ca
 l += [tags['label']]
 e += [tags['entry']]
 
-days = [str(i) for i in range(1, 32)]
+days = [str(iter) for iter in range(1, 32)]
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-years = [str(i) for i in range(1900, 2101)]
-n = [tkinter.StringVar() for i in range(3)]
+years = [str(iter) for iter in range(1900, 2101)]
+n = [tkinter.StringVar() for iter in range(3)]
 date = {'label': tkinter.Label(canvas, text='Dates: '),
         'value': [tkinter.ttk.Combobox(canvas, width=2, textvariable=n[0]),
                   tkinter.ttk.Combobox(canvas, width=10, textvariable=n[1]),
@@ -49,6 +56,8 @@ date['value'][2]['values'] = years
 l += [date['label']]
 c += [date['value']]
 C += [n]
+for iter in range(len(c)):
+    n[iter].trace('w', drop)
 
 v = tkinter.StringVar(root)
 v.set('None')
