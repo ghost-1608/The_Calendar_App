@@ -3,13 +3,6 @@ import tkinter.scrolledtext
 from tkinter import ttk
 
 
-def drop(p, q, r):
-    global c, iter
-
-    print(iter)
-    c[0][iter].event_generate('<Down>')
-
-
 def return_handle(event):
     global days
 
@@ -56,8 +49,6 @@ date['value'][2]['values'] = years
 l += [date['label']]
 c += [date['value']]
 C += [n]
-for iter in range(len(c)):
-    n[iter].trace('w', drop)
 
 v = tkinter.StringVar(root)
 v.set('None')
