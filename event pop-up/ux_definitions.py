@@ -17,10 +17,10 @@ def b_ok(event=None):
             responses += [j.get()]
 
     for i in o:
-        if i.get():
-            responses += [eval(i.get())[0]]
+        if i.get() == 'None':
+            responses += ['None']
         else:
-            responses += [None]
+            responses += [eval(i.get())[0]]
 
     for i in m:
         responses += [i.get('1.0', 'end-1c')]
