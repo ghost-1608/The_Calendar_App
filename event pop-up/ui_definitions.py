@@ -3,41 +3,16 @@ import tkinter.scrolledtext
 from tkinter import ttk
 
 
-def combo_handle(i):
-    global c, n
-
-    j = (2, 9, 4)[i]
-    k = (1, 0, 1)[i]
-
-    if len(c[0][i].get()) > j:
-        n[i].set(c[0][i].get()[:j])
-
-    if c[0][i].get():
-        if c[0][i].get()[-1].isalpha() or c[0][i].get()[-1].isdigit():
-            if (c[0][i].get()[-1].isdigit(), c[0][i].get()[-1].isalpha())[k]:
-                n[i].set(c[0][i].get()[:-1])
-        else:
-            n[i].set(c[0][i].get()[:-1])
-
-
 def return_handle(event):
-    global days
+    global days, e, c, d, m
 
-    for i in [e, c, d, m]:
-        print(root.focus_get(), '\t', i)
-        if root.focus_get() == i:
-            break
-
-    if i == e:
+    if i in e:
         pass
-    if i == c:
-        print('Entered')
-        if c[-1][0].get():
-            if int(c[-1][0]) == 0 or int(c[-1][0]) > 31:
-                n[0].set('')
-    if i == d:
+    if i in c:
         pass
-    if i == m:
+    if i in d:
+        pass
+    if i in m:
         pass
 
 
@@ -60,18 +35,15 @@ months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Augus
 years = [str(i) for i in range(1900, 2101)]
 n = [tkinter.StringVar() for i in range(3)]
 date = {'label': tkinter.Label(canvas, text='Dates: '),
-        'value': [tkinter.ttk.Combobox(canvas, width=2, textvariable=n[0]),
-                  tkinter.ttk.Combobox(canvas, width=10, textvariable=n[1]),
-                  tkinter.ttk.Combobox(canvas, width=4, textvariable=n[2])]}
+        'value': [tkinter.ttk.Combobox(canvas, state='readonly', width=2, textvariable=n[0]),
+                  tkinter.ttk.Combobox(canvas, state='readonly', width=10, textvariable=n[1]),
+                  tkinter.ttk.Combobox(canvas, state='readonly', width=4, textvariable=n[2])]}
 date['value'][0]['values'] = days
 date['value'][1]['values'] = months
 date['value'][2]['values'] = years
 l += [date['label']]
 c += [date['value']]
 C += [n]
-n[0].trace('w', lambda p, q, r: combo_handle(0))
-n[1].trace('w', lambda p, q, r: combo_handle(1))
-n[2].trace('w', lambda p, q, r: combo_handle(2))
 
 v = tkinter.StringVar(root)
 v.set('None')
