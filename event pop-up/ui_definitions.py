@@ -1,110 +1,47 @@
 from initials import *
-import tkinter.scrolledtext
-from tkinter import ttk
 
+l, e, b = [], [], []
 
-def c_trace(p, q, r):
-    global days, vals
+if 'labeled_entries' in d.keys():
+    b_x, b_y = 100, 30
 
-    vals = []
+    if 'buffer_x' in d.keys():
+        b_x = d['buffer_x']
+    if 'buffer_y' in d.keys():
+        b_y = d['buffer_y']
 
-    if c[-1].get():
-        if len(c[-1].get()) <= 2:
-            for i in days:
-                if i[len(c[-1].get()) - 1] == c[-1].get()[len(c[-1].get()) - 1]:
-                    vals += [i]
+    x, y = 0, 0
 
-        c[-1].values = vals
+    if 'x' in d.keys():
+        x = d['x']
+    if 'y' in d.keys():
+        y = d['y']
 
+    for i in range(len(d['labeled_entries'])):
+        l += [tkinter.Label(canvas, text=d['labeled_entries'][i])]
+        e += [tkinter.Entry(canvas)]
 
-def return_handle(event):
-    global days
+    for i in l:
+        i.place(x=x, y=y)
 
-    for i in [e, c, de, m]:
-        if root.focus_get() in i:
-            break
+        y += b_y
 
-    if i == e:
-        pass
-    if i == c:
-        if c[-1].get() and c[-1].get() not in days:
-            c[-1].set('')
-    else:
-        print(True)
-    if i == de:
-        pass
-    if i == m:
-        pass
+    x += b_x; y = d['y']
 
+    for i in e:
+        i.place(x=x, y=y)
 
-l, e, c, d, m = [], [], [], [], []
+        y += b_y
 
-b_x, b_y = 100, 40
+    entries = []
 
-X, Y = 10, 50
+    for i in range(len(l)):
+        entries += [{'label': d['labeled_entries'][i], 'response': e[i]}]
 
-event_name = {'label': tkinter.Label(canvas, text='Event Name: '), 'entry': tkinter.Entry(canvas)}
-l += [event_name['label']]
-e += [event_name['entry']]
+if 'win_title' in d.keys():
+    root.title(d['win_title'])
 
-tags = {'label': tkinter.Label(canvas, text='Tags: '), 'entry': tkinter.Entry(canvas)}
-l += [tags['label']]
-e += [tags['entry']]
-
-days = [str(i) for i in range(1, 32)]
-vals = days
-n = tkinter.StringVar()
-n.trace('w', c_trace)
-date = {'label': tkinter.Label(canvas, text='Dates: '),
-        'value': tkinter.ttk.Combobox(canvas, width=2, textvariable=n)}
-date['value']['values'] = vals
-l += [date['label']]
-c += [date['value']]
-
-
-v = tkinter.StringVar(root)
-v.set('None')
-repeat_select = {'label': tkinter.Label(canvas, text='Repeat: '),
-                 'value': tkinter.OptionMenu(root, v, ['None', 'Daily', 'Weekly', 'Monthly', 'Yearly'])}
-repeat_select['value'].configure(takefocus=True)
-l += [repeat_select['label']]
-d += [repeat_select['value']]
-
-multi_textbox = {'label': tkinter.Label(canvas, text='Description: '),
-                 'entry': tkinter.scrolledtext.ScrolledText(canvas)}
-l += [multi_textbox['label']]
-m += [multi_textbox['entry']]
-
-x, y = X, Y
-
-for i in l:
-    i.place(x=x, y=y)
-    y += b_y
-
-y = Y; x += b_x
-
-for i in e:
-    i.place(x=x, y=y)
-    y += b_y
-
-for i in c:
-    i.place(x=x, y=y)
-    y += b_y
-
-for i in d:
-    i.place(x=x, y=y)
-    y += b_y
-
-for i in m:
-    i.place(x=x, y=y)
-    y += b_y
-
-if 'win_title' in de.keys():
-    root.title(de['win_title'])
-
-if 'win_icon' in de.keys():
-    root.iconphoto(False, tkinter.PhotoImage(de['win_icon']))
-
-root.bind('<Return>', return_handle)
+if 'win_icon' in d.keys():
+    root.iconphoto(False, tkinter.PhotoImage(d['win_icon']))
 
 canvas.pack()
