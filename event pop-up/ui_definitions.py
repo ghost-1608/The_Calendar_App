@@ -21,7 +21,7 @@ def return_handle(event):
         pass
 
 
-l, e, c, C, d, o, m = [], [], [], [], [], [], []
+l, e, c, d, m = [], [], [], [], []
 
 b_x, b_y = 100, 40
 
@@ -48,7 +48,6 @@ date['value'][1]['values'] = months
 date['value'][2]['values'] = years
 l += [date['label']]
 c += [date['value']]
-C += [n]
 
 v = tkinter.StringVar(root)
 v.set('None')
@@ -58,7 +57,6 @@ repeat_select['value'].configure(takefocus=True)
 # repeat_select['value'].configure(bg=bg)
 l += [repeat_select['label']]
 d += [repeat_select['value']]
-o += [v]
 
 multi_textbox = {'label': tkinter.Label(canvas, text='Description: '),
                  'entry': tkinter.scrolledtext.ScrolledText(canvas, width=50, height=10)}
@@ -100,7 +98,7 @@ if 'win_title' in de.keys():
 if 'win_icon' in de.keys():
     root.iconphoto(False, tkinter.PhotoImage(de['win_icon']))
 
-responses = [e, C, o, m]
+responses = [[e], [c], [d], [m]]
 
 root.bind('<Return>', return_handle)
 
