@@ -3,38 +3,18 @@ import tkinter.scrolledtext
 from tkinter import ttk
 
 
-def combo_handle(i):
-    global c, n
-
-    j = (2, 9, 4)[i]
-    k = (1, 0, 1)[i]
-
-    if len(c[0][i].get()) > j:
-        n[i].set(c[0][i].get()[:j])
-
-    if c[0][i].get():
-        if c[0][i].get()[-1].isalpha() or c[0][i].get()[-1].isdigit():
-            if (c[0][i].get()[-1].isdigit(), c[0][i].get()[-1].isalpha())[k]:
-                n[i].set(c[0][i].get()[:-1])
-        else:
-            n[i].set(c[0][i].get()[:-1])
-
-
 def return_handle(event):
     global days
 
     for i in [e, c, d, m]:
-        print(root.focus_get(), '\t', i)
-        if root.focus_get() == i:
+        if root.focus_get() in i:
             break
 
     if i == e:
         pass
     if i == c:
-        print('Entered')
-        if c[-1][0].get():
-            if int(c[-1][0]) == 0 or int(c[-1][0]) > 31:
-                n[0].set('')
+        if c[-1].get() and c[-1].get() not in days:
+            c[-1].set('')
     if i == d:
         pass
     if i == m:
@@ -55,10 +35,10 @@ tags = {'label': tkinter.Label(canvas, text='Tags: '), 'entry': tkinter.Entry(ca
 l += [tags['label']]
 e += [tags['entry']]
 
-days = [str(i) for i in range(1, 32)]
+days = [str(iter) for iter in range(1, 32)]
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-years = [str(i) for i in range(1900, 2101)]
-n = [tkinter.StringVar() for i in range(3)]
+years = [str(iter) for iter in range(1900, 2101)]
+n = [tkinter.StringVar() for iter in range(3)]
 date = {'label': tkinter.Label(canvas, text='Dates: '),
         'value': [tkinter.ttk.Combobox(canvas, width=2, textvariable=n[0]),
                   tkinter.ttk.Combobox(canvas, width=10, textvariable=n[1]),
@@ -69,9 +49,6 @@ date['value'][2]['values'] = years
 l += [date['label']]
 c += [date['value']]
 C += [n]
-n[0].trace('w', lambda p, q, r: combo_handle(0))
-n[1].trace('w', lambda p, q, r: combo_handle(1))
-n[2].trace('w', lambda p, q, r: combo_handle(2))
 
 v = tkinter.StringVar(root)
 v.set('None')
