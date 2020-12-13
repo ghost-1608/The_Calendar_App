@@ -3,6 +3,20 @@ import tkinter.scrolledtext
 from tkinter import ttk
 
 
+def c_trace(p, q, r):
+    global days, vals
+
+    vals = []
+
+    if c[-1].get():
+        if len(c[-1].get()) <= 2:
+            for i in days:
+                if i[len(c[-1].get()) - 1] == c[-1].get()[len(c[-1].get()) - 1]:
+                    vals += [i]
+
+        c[-1].values = vals
+
+
 def return_handle(event):
     global days
 
@@ -15,6 +29,8 @@ def return_handle(event):
     if i == c:
         if c[-1].get() and c[-1].get() not in days:
             c[-1].set('')
+    else:
+        print(True)
     if i == de:
         pass
     if i == m:
@@ -38,6 +54,7 @@ e += [tags['entry']]
 days = [str(i) for i in range(1, 32)]
 vals = days
 n = tkinter.StringVar()
+n.trace('w', c_trace)
 date = {'label': tkinter.Label(canvas, text='Dates: '),
         'value': tkinter.ttk.Combobox(canvas, width=2, textvariable=n)}
 date['value']['values'] = vals
@@ -48,7 +65,7 @@ c += [date['value']]
 v = tkinter.StringVar(root)
 v.set('None')
 repeat_select = {'label': tkinter.Label(canvas, text='Repeat: '),
-                 'value': tkinter.OptionMenu(root, v, ['None'], ['Daily'], ['Weekly'], ['Monthly'], ['Yearly'])}
+                 'value': tkinter.OptionMenu(root, v, ['None', 'Daily', 'Weekly', 'Monthly', 'Yearly'])}
 repeat_select['value'].configure(takefocus=True)
 l += [repeat_select['label']]
 d += [repeat_select['value']]
