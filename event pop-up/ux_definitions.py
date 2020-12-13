@@ -5,22 +5,18 @@ import hashlib
 
 
 def b_ok(event=None):
-    global e, C, o, m
+    global responses
 
-    responses = []
-
-    for i in e:
-        responses += [i.get()]
-
-    for i in C:
-        for j in i:
-            responses += [j.get()]
-
-    for i in o:
-        responses += [eval(i.get())[0]]
-
-    for i in m:
-        responses += [i.get('1.0', 'end-1c')]
+    for i in range(len(responses)):
+        for j in range(len(responses[i])):
+            if 'list' not in str(type(responses[i][j])):
+                if i == 3:
+                    responses[i][j] = responses[i][j].get('1.0', 'end-1c')
+                else:
+                    responses[i][j] = responses[i][j].get()
+            else:
+                for k in range(len(responses[i][j])):
+                    responses[i][j][k] = responses[i][j][k].get()
 
     x = pickle.dumps(str(responses))
 

@@ -100,6 +100,8 @@ if 'win_title' in de.keys():
 if 'win_icon' in de.keys():
     root.iconphoto(False, tkinter.PhotoImage(de['win_icon']))
 
+responses = [e, C, o, m]
+
 root.bind('<Return>', return_handle)
 
 canvas.pack()
