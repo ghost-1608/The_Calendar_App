@@ -45,10 +45,10 @@ l += [date['label']]
 c += [date['value']]
 C += [n]
 
-v = tkinter.StringVar(root)
+v = tkinter.StringVar(canvas)
 v.set('None')
 repeat_select = {'label': tkinter.Label(canvas, text='Repeat: '),
-                 'value': tkinter.OptionMenu(root, v, ['None'], ['Daily'], ['Weekly'], ['Monthly'], ['Yearly'])}
+                 'value': tkinter.OptionMenu(canvas, v, ['None'], ['Daily'], ['Weekly'], ['Monthly'], ['Yearly'])}
 repeat_select['value'].configure(takefocus=True)
 # repeat_select['value'].configure(bg=bg)
 l += [repeat_select['label']]
