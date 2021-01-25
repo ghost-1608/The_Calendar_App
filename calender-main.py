@@ -1,15 +1,20 @@
 #CS Project - Calender
 
-import tkinter as tk
-import tkinter.ttk as ttk
-import tkinter.scrolledtext
-import datetime as dt
-from time import strftime
-from functools import partial
-import os
-import pickle
-import requests
+try:
+    import tkinter as tk
+    import tkinter.ttk as ttk
+    import tkinter.scrolledtext
+    import datetime as dt
+    from time import strftime
+    from functools import partial
+    import os
+    import pickle
+    import requests
+except:
+    print('[CRITICAL] Required libraries are not installed')
 
+
+#Global constants
 DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -128,6 +133,7 @@ def create_calender(date):
 
 
 def has_event(date):
+    '''Check if a given date has an event'''
     for e in events.keys():
         if e[2] == date[2]:
             if e[1] == date[1]:
@@ -169,6 +175,7 @@ def switch_month(value):
 
 
 def set_date_selected(yyyy, mm, dd):
+    '''Set the current date to be viewed'''
     global date_selected
     date_selected = Date(yyyy, mm, dd)
     event_tree.heading('#0', text='Events on '+str(date_selected))
@@ -199,6 +206,7 @@ def update_time():
 
 
 def display_events():
+    '''Display events onto the Treeview'''
     yyyy = date_selected.yyyy
     mm = date_selected.mm
     dd = date_selected.dd
@@ -219,7 +227,8 @@ def display_events():
 
 
 
-def delete_event(date, index, window):
+def delete_event(date, index, window=None):
+    '''Delete an event of the specified date and index'''
     global events
     try:
         events[date].pop(index)
@@ -234,6 +243,7 @@ def delete_event(date, index, window):
 
 
 def event_select(event=None):
+    '''Display event details in a popup window'''
     value = event_tree.item(event_tree.selection()[0], 'value')
     popup = tk.Toplevel(root)
     popup.title(eval(value[-1])[0])
@@ -241,36 +251,14 @@ def event_select(event=None):
     tk.Label(popup, text=eval(value[-1])[0] + ' (' + str(date_selected) + ')', font=('Courier', 14, 'bold')).pack(side='top', fill='x')
     tk.Message(popup, text=eval(value[-1])[-1], font=('Courier', 12)).pack()
     tk.Button(popup, text='Delete Event', bg='#F21', fg='#FFF', font=('Courier', 12), command=lambda: delete_event(eval(value[0]), eval(value[1]), popup)).pack()
+    popup.mainloop()
 
 
 def weather():
+    '''Display the live weather forecast'''
     B=100
     L=500
     CITY='chennai'
-    '''
-    {
-    'coord': {'lon': 78.47, 'lat': 17.38}, 
-    'weather': [{'id': 721, 'main': 'Haze', 'description': 'haze', 'icon': '50n'}], 
-    'base': 'stations',
-    'main': {'temp': 23.67, 'feels_like': 25.1, 'temp_min': 23, 'temp_max': 24, 'pressure': 1016, 'humidity': 60}, 
-    'visibility': 5000, 
-    'wind': {'speed': 0.5, 'deg': 0},
-    'clouds': {'all': 13},
-    'dt': 1606827794,
-    'sys': {'type': 1, 'id': 9214,
-    'country': 'IN',
-    'sunrise': 1606784427,
-    'sunset': 1606824621},
-    'timezone': 19800,
-    'id': 1269843,
-    'name': 'Hyderabad',
-    'cod': 200
-    }
-    '''
-
-    #api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-    #d1f00b521eb58c2a2721dfefacc66c3a
-
 
     def change(window, city):
         window.title('Change city (current: '+city+')')
@@ -318,9 +306,8 @@ def weather():
     win.mainloop()
 
     
-
 def generate_event_ui():
-    ''' This is kinda complex lol'''
+    ''' Display the new event page'''
     def on_b_ok():
         global events
         responses = []
@@ -446,9 +433,11 @@ def generate_event_ui():
     b_cancel.place(x=470, y=450)
 
     canvas.pack()
+    popup.mainloop()
 
 
 def about():
+    '''Display about the developers'''
     popup = tk.Toplevel(root)
     popup.title('About')
     text = r"""
@@ -466,7 +455,7 @@ def about():
     |    Created by,                   |
     |    ~ Arka 'Ghost' Ghosh          |
     |    ~ Kavirajar 'Data Overflow'   |
-    |    ~ Lohith Sarathy              |
+    |    ~ Lohith Saradhi              |
     +----------------------------------+
 
     """
@@ -559,30 +548,3 @@ preload_calender()
 #Pack the mainframe and start the main loop
 main_frame.pack(expand=True, fill='both')
 root.mainloop()
-
-'''
-menubar = tk.Menu(root)
-filemenu = tk.Menu(menubar, tearoff=0)
-filemenu.add_command(label="Server Info", state='disabled')
-filemenu.add_command(label="Join New", state='disabled')
-filemenu.add_command(label="Host New", state='disabled')
-filemenu.add_separator()
-filemenu.add_command(label="Exit", command=quit)
-menubar.add_cascade(label="Main", menu=filemenu)
-
-settingsmenu = tk.Menu(menubar, tearoff=0)
-settingsmenu.add_command(label='Clear Screen')
-settingsmenu.add_command(label='Toggle Dark Mode')
-menubar.add_cascade(label="Options", menu=settingsmenu)
-
-helpmenu = tk.Menu(menubar, tearoff=0)
-helpmenu.add_command(label="About")
-menubar.add_cascade(label="Help", menu=helpmenu)
-root.config(menu=menubar)
-
-while True:
-    try:
-        root.update()
-    except:
-        break
-'''
