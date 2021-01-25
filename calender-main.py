@@ -378,6 +378,9 @@ def generate_event_ui():
     date['value'][0]['values'] = days
     date['value'][1]['values'] = months
     date['value'][2]['values'] = years
+    date['value'][0].current(days.index(str(date_selected.dd)))
+    date['value'][1].current(date_selected.mm-1)
+    date['value'][2].current(date_selected.yyyy - 1900)
     l += [date['label']]
     c += [date['value']]
     C += [n]
