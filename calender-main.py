@@ -3,7 +3,7 @@
 try:
     import tkinter as tk
     import tkinter.ttk as ttk
-    import tkinter.scrolledtext
+    from tkinter.scrolledtext import ScrolledText
     import datetime as dt
     from time import strftime
     from functools import partial
@@ -120,7 +120,7 @@ def create_calender(date):
                 else:
                     tk.Button(week_frames[week+1], text=disp, state=state, bg='#48D', fg='white', font=('Courier', 12), width=3, height=1, command=partial(set_date_selected, yyyy, mm, day_no)).pack(side='left', expand=True, fill='both')
                 continue
-            if has_event((yyyy, mm, day_no)):
+            if has_event((yyyy, mm, day_no)) and month_no == 1:
                 ttk.Button(week_frames[week+1], text=disp, state=state, style='CalenderEvent.TButton', command=partial(set_date_selected, yyyy, mm, day_no)).pack(side='left', expand=True, fill='both')
             else:
                 ttk.Button(week_frames[week+1], text=disp, state=state, style='Calender.TButton', command=partial(set_date_selected, yyyy, mm, day_no)).pack(side='left', expand=True, fill='both')
@@ -172,6 +172,52 @@ def switch_month(value):
     month_label.config(text=MONTHS[view.mm-1]+', '+str(view.yyyy))
     preload_calender()
 
+
+def switch_date(y, m, d):
+    '''Switch to a specified date'''
+    global calender_frames, view
+    try:
+        yyyy = int(y)
+        mm = MONTHS.index(m) + 1
+        dd = int(d)
+    except:
+        return
+    view = Date(yyyy, mm, dd)
+    calender_frames[0].pack_forget()
+    calender_frames[0] = create_calender(view)
+    month_label.config(text=MONTHS[view.mm-1]+', '+str(view.yyyy))
+    calender_frames[0].pack(fill='both', expand=True)
+    preload_calender()
+
+
+def jump_to_date():
+    '''Display the jump to date window'''
+    canvas = tk.Toplevel(root)
+    canvas.title('Jump to Date')
+    canvas.minsize(240, 100)
+    tk.Label(canvas, text='Select a Date : ').grid(row=1, column=1, columnspan=3)
+    days = [str(i) for i in range(1, 32)]
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    years = [str(i) for i in range(1900, 2101)]
+    n = [tk.StringVar() for i in range(3)]
+    date = {'label': tk.Label(canvas, text='Dates: '),
+            'value': [ttk.Combobox(canvas, state='readonly', width=2, textvariable=n[0]),
+                      ttk.Combobox(canvas, state='readonly', width=10, textvariable=n[1]),
+                      ttk.Combobox(canvas, state='readonly', width=4, textvariable=n[2])]}
+    date['value'][0]['values'] = days
+    date['value'][1]['values'] = months
+    date['value'][2]['values'] = years
+    date['value'][0].current(days.index(str(date_selected.dd)))
+    date['value'][1].current(date_selected.mm-1)
+    try:
+        date['value'][2].current(date_selected.yyyy - 1900)
+    except:
+        date['value'][2].current(200)
+    date['value'][0].grid(row=2, column=1)
+    date['value'][1].grid(row=2, column=2)
+    date['value'][2].grid(row=2, column=3)
+    tk.Button(canvas, text='Jump', command=lambda: switch_date(date['value'][2].get(), date['value'][1].get(), date['value'][0].get())).grid(row=3, column=1, columnspan=3)
+    canvas.mainloop()
 
 
 def set_date_selected(yyyy, mm, dd):
@@ -247,10 +293,14 @@ def event_select(event=None):
     value = event_tree.item(event_tree.selection()[0], 'value')
     popup = tk.Toplevel(root)
     popup.title(eval(value[-1])[0])
-    popup.minsize(300, 200)
+    popup.minsize(150, 100)
     tk.Label(popup, text=eval(value[-1])[0] + ' (' + str(date_selected) + ')', font=('Courier', 14, 'bold')).pack(side='top', fill='x')
-    tk.Message(popup, text=eval(value[-1])[-1], font=('Courier', 12)).pack()
-    tk.Button(popup, text='Delete Event', bg='#F21', fg='#FFF', font=('Courier', 12), command=lambda: delete_event(eval(value[0]), eval(value[1]), popup)).pack()
+    desc = ScrolledText(popup, bg='gray5', fg='white', font = ('Courier New','12'), wrap='word', height=10, width=30)
+    desc.insert('insert', eval(value[-1])[-1])
+    desc.config(state='disabled')
+    desc.pack(expand=True, fill='both')    
+    tk.Label(popup, text='tags: '+eval(value[-1])[1], font=('Courier', 12)).pack()
+    tk.Button(popup, text='Delete Event', bg='#F21', fg='#FFF', font=('Courier', 12), command=lambda: delete_event(eval(value[0]), eval(value[1]), popup)).pack(side='bottom')
     popup.mainloop()
 
 
@@ -262,7 +312,10 @@ def weather():
 
     def change(window, city):
         window.title('Change city (current: '+city+')')
-        get_weather(city.lower())
+        try:
+            get_weather(city.lower())
+        except:
+            label_w['text'] = "Error: Unable to retrive\nweather info."
 
     def city_select():
         win=tk.Toplevel()
@@ -302,7 +355,10 @@ def weather():
 
     select_city=tk.Button(label_w,text='select city',command=lambda:city_select())
     select_city.place(relx=0.8,rely=0.8,relwidth=0.2,relheight=0.2)
-    get_weather(CITY)
+    try:
+        get_weather(CITY)
+    except:
+        label_w['text'] = "Error: Unable to retrive\nweather info."
     win.mainloop()
 
     
@@ -380,7 +436,10 @@ def generate_event_ui():
     date['value'][2]['values'] = years
     date['value'][0].current(days.index(str(date_selected.dd)))
     date['value'][1].current(date_selected.mm-1)
-    date['value'][2].current(date_selected.yyyy - 1900)
+    try:
+        date['value'][2].current(date_selected.yyyy - 1900)
+    except:
+        date['value'][2].current(200)
     l += [date['label']]
     c += [date['value']]
     C += [n]
@@ -396,7 +455,7 @@ def generate_event_ui():
     o += [v]
 
     multi_textbox = {'label': tk.Label(canvas, text='Description: '),
-                     'entry': tkinter.scrolledtext.ScrolledText(canvas, width=50, height=10)}
+                     'entry': ScrolledText(canvas, width=50, height=10)}
     l += [multi_textbox['label']]
     m += [multi_textbox['entry']]
 
@@ -511,17 +570,22 @@ event_tree.column("#0", minwidth=10)
 add_event_btn = tk.Button(event_frame, text='Add Event', command=generate_event_ui)
 add_event_btn.pack(side='bottom')
 event_tree.pack(expand=True, fill='y')
+display_events()
 
 #Setting up the menu
 menubar = tk.Menu(root)
 mainmenu = tk.Menu(menubar, tearoff=0)
 mainmenu.add_command(label="Refresh", command=lambda: switch_month(0))
-mainmenu.add_command(label="Next Month", command=lambda: switch_month(1))
-mainmenu.add_command(label="Previous Month", command=lambda: switch_month(-1))
 mainmenu.add_command(label="Weather Today", command=weather)
 mainmenu.add_separator()
 mainmenu.add_command(label="Exit", command=quit)
 menubar.add_cascade(label="Main", menu=mainmenu)
+
+navmenu = tk.Menu(menubar, tearoff=0)
+navmenu.add_command(label="Next Month", command=lambda: switch_month(1))
+navmenu.add_command(label="Previous Month", command=lambda: switch_month(-1))
+navmenu.add_command(label="Jump to Date", command=jump_to_date)
+menubar.add_cascade(label="Navigation", menu=navmenu)
 
 eventmenu = tk.Menu(menubar, tearoff=0)
 eventmenu.add_command(label="Add Event", command=generate_event_ui)
