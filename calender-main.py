@@ -160,15 +160,15 @@ def switch_month(value):
     calender_frames[0].pack_forget()
     if value == 1:
         view = view.next_month()
-        calender_frames[1].pack(fill='both', expand=True)
+        calender_frames[1].pack(side='left', fill='both', expand=True)
         calender_frames[0] = calender_frames[1]
     elif value == -1:
         view = view.prev_month()
-        calender_frames[-1].pack(fill='both', expand=True)
+        calender_frames[-1].pack(side='left', fill='both', expand=True)
         calender_frames[0] = calender_frames[-1]
     else:
         calender_frames[0] = create_calender(view)
-        calender_frames[0].pack(fill='both', expand=True)
+        calender_frames[0].pack(side='left', fill='both', expand=True)
     month_label.config(text=MONTHS[view.mm-1]+', '+str(view.yyyy))
     preload_calender()
 
@@ -186,16 +186,17 @@ def switch_date(y, m, d):
     calender_frames[0].pack_forget()
     calender_frames[0] = create_calender(view)
     month_label.config(text=MONTHS[view.mm-1]+', '+str(view.yyyy))
-    calender_frames[0].pack(fill='both', expand=True)
+    calender_frames[0].pack(side='left', fill='both', expand=True)
     preload_calender()
 
 
 def jump_to_date():
     '''Display the jump to date window'''
     canvas = tk.Toplevel(root)
-    canvas.title('Jump to Date')
-    canvas.minsize(240, 100)
-    tk.Label(canvas, text='Select a Date : ').grid(row=1, column=1, columnspan=3)
+    canvas.title('Jump')
+    canvas.geometry('220x100')
+    canvas.resizable(False, False)
+    tk.Label(canvas, text='Select a Date : ', font=('Courier', 16, 'bold')).grid(row=1, column=1, columnspan=3)
     days = [str(i) for i in range(1, 32)]
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     years = [str(i) for i in range(1900, 2101)]
@@ -216,7 +217,7 @@ def jump_to_date():
     date['value'][0].grid(row=2, column=1)
     date['value'][1].grid(row=2, column=2)
     date['value'][2].grid(row=2, column=3)
-    tk.Button(canvas, text='Jump', command=lambda: switch_date(date['value'][2].get(), date['value'][1].get(), date['value'][0].get())).grid(row=3, column=1, columnspan=3)
+    tk.Button(canvas, text='JUMP', font=('Courier', 14), command=lambda: switch_date(date['value'][2].get(), date['value'][1].get(), date['value'][0].get())).grid(row=3, column=1, columnspan=3, pady=(10, 5))
     canvas.mainloop()
 
 
@@ -295,7 +296,7 @@ def event_select(event=None):
     popup.title(eval(value[-1])[0])
     popup.minsize(150, 100)
     tk.Label(popup, text=eval(value[-1])[0] + ' (' + str(date_selected) + ')', font=('Courier', 14, 'bold')).pack(side='top', fill='x')
-    desc = ScrolledText(popup, bg='gray5', fg='white', font = ('Courier New','12'), wrap='word', height=10, width=30)
+    desc = ScrolledText(popup, bg='gray10', fg='white', font = ('Courier New','12'), wrap='word', height=10, width=30)
     desc.insert('insert', eval(value[-1])[-1])
     desc.config(state='disabled')
     desc.pack(expand=True, fill='both')    
@@ -502,8 +503,8 @@ def about():
     '''Display about the developers'''
     popup = tk.Toplevel(root)
     popup.title('About')
+    popup.minsize(640, 420)
     text = r"""
-
    ______      __               __             ___              
   / ____/___ _/ /__  ____  ____/ /__  _____   /   |  ____  ____ 
  / /   / __ `/ / _ \/ __ \/ __  / _ \/ ___/  / /| | / __ \/ __ \
@@ -519,6 +520,8 @@ def about():
     |    ~ Kavirajar 'Data Overflow'   |
     |    ~ Lohith Saradhi              |
     +----------------------------------+
+
+    Powered by, PERSPECTILT (2021)
 
     """
     tk.Label(popup, text=text, font = ('Courier New','12')).pack()
@@ -539,7 +542,7 @@ if os.path.exists('storage.bin') and os.path.getsize('storage.bin'):
 
 #Creating the Graphical User Interface
 root = tk.Tk()
-root.minsize(480, 330)
+root.minsize(540, 330)
 root.title('Calender')
 root.bind('<KeyRelease>', keypressed)
 main_frame = tk.Frame(root)
@@ -566,10 +569,10 @@ event_frame = tk.Frame(main_frame)
 event_tree = ttk.Treeview(event_frame)
 event_tree.bind("<<TreeviewSelect>>", event_select)
 event_tree.heading('#0', text='Events on '+str(date_selected))
-event_tree.column("#0", minwidth=10)
+event_tree.column("#0")
 add_event_btn = tk.Button(event_frame, text='Add Event', command=generate_event_ui)
 add_event_btn.pack(side='bottom')
-event_tree.pack(expand=True, fill='y')
+event_tree.pack(expand=True, fill='both')
 display_events()
 
 #Setting up the menu
@@ -605,11 +608,11 @@ left_month_btn.pack(side='left')
 right_month_btn.pack(side='right')
 nav_frame.pack(side='right')
 month_frame.pack(side='top', fill='x')
-event_frame.pack(side='right', fill='y')
+event_frame.pack(side='right', fill='both')
 
 #Creating the calender
 calender_frames[0] = create_calender(view)
-calender_frames[0].pack(fill='both', expand=True)
+calender_frames[0].pack(side='left', fill='both', expand=True)
 preload_calender()
 
 #Pack the mainframe and start the main loop
