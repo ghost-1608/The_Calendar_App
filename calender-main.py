@@ -1,4 +1,9 @@
-#CS Project - Calender
+# Computer Science Project - Calender
+# Class 12 - DAV Boys Senior Secondary School, Gopalapuram, Chennai
+# Created by,
+# ~ Arka Ghosh
+# ~ Kavirajar
+# ~ Lohith Saradhi
 
 try:
     import tkinter as tk
@@ -11,7 +16,7 @@ try:
     import pickle
     import requests
 except:
-    print('[CRITICAL] Required libraries are not installed')
+    print('[ERROR] Required libraries are not installed')
 
 
 #Global constants
