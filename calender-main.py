@@ -178,7 +178,7 @@ def switch_month(value):
     preload_calender()
 
 
-def switch_date(y, m, d):
+def switch_date(y='2021', m='January', d='1', date=None):
     '''Switch to a specified date'''
     global calender_frames, view
     try:
@@ -187,7 +187,11 @@ def switch_date(y, m, d):
         dd = int(d)
     except:
         return
-    view = Date(yyyy, mm, dd)
+
+    if date:
+        view = date
+    else:
+        view = Date(yyyy, mm, dd)
     calender_frames[0].pack_forget()
     calender_frames[0] = create_calender(view)
     month_label.config(text=MONTHS[view.mm-1]+', '+str(view.yyyy))
@@ -530,7 +534,11 @@ def about():
 
     """
     tk.Label(popup, text=text, font = ('Courier New','12')).pack()
-    
+    popup.mainloop()
+
+
+
+  
 view = Date(TODAY.year, TODAY.month, TODAY.day)
 calender_frames = {-1:None, 0:None, 1:None}
 date_selected = Date(TODAY.year, TODAY.month, TODAY.day)
@@ -590,6 +598,7 @@ mainmenu.add_command(label="Exit", command=quit)
 menubar.add_cascade(label="Main", menu=mainmenu)
 
 navmenu = tk.Menu(menubar, tearoff=0)
+navmenu.add_command(label="Today", command=lambda: switch_date(date=Date(TODAY.year, TODAY.month, TODAY.day)))
 navmenu.add_command(label="Next Month", command=lambda: switch_month(1))
 navmenu.add_command(label="Previous Month", command=lambda: switch_month(-1))
 navmenu.add_command(label="Jump to Date", command=jump_to_date)
