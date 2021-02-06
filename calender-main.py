@@ -15,6 +15,8 @@ try:
     import os
     import pickle
     import requests
+    import hashlib
+    import hmac
 except ModuleNotFoundError:
     print('[ERROR] Required libraries are not installed')
 
@@ -25,9 +27,13 @@ MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Augus
 DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 TODAY = dt.datetime.today()
 
+# Condition for file health check
+cond = True
+
 
 def day_of_week(year, month, day):
     """Returns the day of the week for the specified date"""
+
     t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
     year -= month < 3
     return (year + int(year / 4) - int(year / 100) + int(year / 400) + t[month - 1] + day) % 7
@@ -35,6 +41,7 @@ def day_of_week(year, month, day):
 
 def is_leap(year):
     """Check if given year is a leap year or not"""
+
     if year % 100:
         return not (year % 4)
     else:
@@ -146,6 +153,7 @@ def create_calender(date):
 
 def has_event(date):
     """Check if a given date has an event"""
+
     for e in events.keys():
         if e[2] == date[2]:
             if e[1] == date[1]:
@@ -161,6 +169,7 @@ def has_event(date):
 
 def preload_calender():
     """Preload the calender frame for the preceding and the successive month"""
+
     global calender_frames
     calender_frames[-1] = create_calender(view.prev_month())
     calender_frames[1] = create_calender(view.next_month())
@@ -168,6 +177,7 @@ def preload_calender():
 
 def switch_month(value):
     """Switch month by value; +1 for next month, -1 for previous month, 0 for refresh"""
+
     global calender_frames, view
     calender_frames[0].pack_forget()
     if value == 1:
@@ -187,12 +197,13 @@ def switch_month(value):
 
 def switch_date(y='2021', m='January', d='1', date=None):
     """Switch to a specified date"""
+
     global calender_frames, view
     try:
         yyyy = int(y)
         mm = MONTHS.index(m) + 1
         dd = int(d)
-    except:
+    except ValueError:
         return
 
     if date:
@@ -208,40 +219,39 @@ def switch_date(y='2021', m='January', d='1', date=None):
 
 def jump_to_date():
     """Display the jump to date window"""
+
+    global DAYS_IN_MONTH, MONTHS
+
     canvas = tk.Toplevel(root)
     canvas.title('Jump')
     canvas.geometry('220x100')
     canvas.resizable(False, False)
     tk.Label(canvas, text='Select a Date : ', font=('Courier', 16, 'bold')).grid(row=1, column=1, columnspan=3)
-    days = [str(i) for i in range(1, 32)]
-    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-              'November', 'December']
+    days = [str(i) for i in range(1, DAYS_IN_MONTH[TODAY.month - 1] + (1, 2)[TODAY.month == 2 and is_leap(TODAY.year)])]
     years = [str(i) for i in range(1900, 2101)]
     n = [tk.StringVar() for i in range(3)]
     date = {'label': tk.Label(canvas, text='Dates: '),
             'value': [ttk.Combobox(canvas, state='readonly', width=2, textvariable=n[0]),
                       ttk.Combobox(canvas, state='readonly', width=10, textvariable=n[1]),
-                      ttk.Combobox(canvas, state='readonly', width=4, textvariable=n[2])]}
+                      ttk.Combobox(canvas, width=4, textvariable=n[2])]}
     date['value'][0]['values'] = days
-    date['value'][1]['values'] = months
+    date['value'][1]['values'] = MONTHS
     date['value'][2]['values'] = years
     date['value'][0].current(days.index(str(date_selected.dd)))
     date['value'][1].current(date_selected.mm - 1)
-    try:
-        date['value'][2].current(date_selected.yyyy - 1900)
-    except:
-        date['value'][2].current(200)
+    date['value'][2].current(date_selected.yyyy - 1900)
     date['value'][0].grid(row=2, column=1)
     date['value'][1].grid(row=2, column=2)
     date['value'][2].grid(row=2, column=3)
     tk.Button(canvas, text='JUMP', font=('Courier', 14),
-              command=lambda: switch_date(date['value'][2].get(), date['value'][1].get(), date['value'][0].get())).grid(
-        row=3, column=1, columnspan=3, pady=(10, 5))
+              command=lambda: switch_date(date['value'][2].get(), date['value'][1].get(),
+                                          date['value'][0].get())).grid(row=3, column=1, columnspan=3, pady=(10, 5))
     canvas.mainloop()
 
 
 def set_date_selected(yyyy, mm, dd):
     """Set the current date to be viewed"""
+
     global date_selected
     date_selected = Date(yyyy, mm, dd)
     event_tree.heading('#0', text='Events on ' + str(date_selected))
@@ -250,6 +260,7 @@ def set_date_selected(yyyy, mm, dd):
 
 def keypressed(event):
     """Called when any key is pressed"""
+
     if event.char == 'q' or event.keycode == 37:
         switch_month(-1)
     if event.char == 'e' or event.keycode == 39:
@@ -258,6 +269,7 @@ def keypressed(event):
 
 def update_time():
     """Updating the time"""
+
     global TODAY, view
     t = strftime('%H:%M:%S%p')
     if t[3:8] == '00:00':
@@ -265,7 +277,7 @@ def update_time():
             TODAY = dt.datetime.today()
             view = Date(TODAY.year, TODAY.month, TODAY.day)
             switch_month(0)
-        except:
+        except:                         # Can't find type of exceptions that could be raised
             pass
     label_t['text'] = t
     label_t.after(1000, update_time)
@@ -273,6 +285,7 @@ def update_time():
 
 def display_events():
     """Display events onto the Treeview"""
+
     yyyy = date_selected.yyyy
     mm = date_selected.mm
     dd = date_selected.dd
@@ -294,21 +307,26 @@ def display_events():
 
 def delete_event(date, index, window=None):
     """Delete an event of the specified date and index"""
+
     global events
     try:
         events[date].pop(index)
         if not events[date]:
             del events[date]
-        with open('storage.bin', 'wb') as file:
+        with open('storage.dat', 'wb') as file:
             pickle.dump(events, file)
+        with open('KEY.BIN', 'wb') as f:
+            with open('storage.dat', 'rb') as file:
+                f.write(hmac.new(b'shared-key', file.read(), hashlib.sha256).digest())
         switch_month(0)
         window.destroy()
-    except:
+    except:             # tkinter errors can't be handled regularly
         pass
 
 
 def event_select(event=None):
     """Display event details in a popup window"""
+
     value = event_tree.item(event_tree.selection()[0], 'value')
     popup = tk.Toplevel(root)
     popup.title(eval(value[-1])[0])
@@ -327,20 +345,21 @@ def event_select(event=None):
 
 def weather():
     """Display the live weather forecast"""
-    B = 100
+
+    B = 200
     L = 500
     CITY = 'chennai'
 
     def change(window, city):
-        window.title('Change city (current: ' + city + ')')
+        window.title('Change city (current: ' + city.capitalize() + ')')
         try:
             get_weather(city.lower())
-        except:
+        except:         # Broad exception clause
             label_w['text'] = "Error: Unable to retrive\nweather info."
 
     def city_select():
         win = tk.Toplevel()
-        win.title('Change city (current: ' + CITY + ')')
+        win.title('Change city (current: ' + CITY.capitalize() + ')')
         win.geometry('500x100')
 
         entry = tk.Entry(win)
@@ -359,7 +378,7 @@ def weather():
         parameters = {'appid': appid, 'q': city, 'units': 'metric'}
         response = requests.get(url, params=parameters)
         response = response.json()
-        label_w['text'] = str(response['weather'][0]['description']) + '\n' + 'temp:' + str(
+        label_w['text'] = CITY.capitalize() + '\n' + str(response['weather'][0]['description']) + '\n' + 'temp:' + str(
             response['main']['temp']) + '\n' + 'feels like:' + str(response['main']['feels_like'])
 
     win = tk.Toplevel()
@@ -379,7 +398,7 @@ def weather():
     select_city.place(relx=0.8, rely=0.8, relwidth=0.2, relheight=0.2)
     try:
         get_weather(CITY)
-    except:
+    except:             # Broad exception clause
         label_w['text'] = "Error: Unable to retrive\nweather info."
     win.mainloop()
 
@@ -413,7 +432,7 @@ def generate_event_ui():
             yyyy = int(responses[4])
             mm = MONTHS.index(responses[3]) + 1
             dd = int(responses[2])
-        except:
+        except ValueError:
             popup.destroy()
             return
 
@@ -422,8 +441,11 @@ def generate_event_ui():
         else:
             events[(yyyy, mm, dd)] = [[responses[0], responses[1], responses[5], responses[6]]]
 
-        with open('storage.bin', 'wb') as file:
+        with open('storage.dat', 'wb') as file:
             pickle.dump(events, file)
+        with open('KEY.BIN', 'wb') as f:
+            with open('storage.dat', 'rb') as file:
+                f.write(hmac.new(b'shared-key', file.read(), hashlib.sha256).digest())
 
         switch_month(0)
         popup.destroy()
@@ -453,16 +475,13 @@ def generate_event_ui():
     date = {'label': tk.Label(canvas, text='Dates: '),
             'value': [ttk.Combobox(canvas, state='readonly', width=2, textvariable=n[0]),
                       ttk.Combobox(canvas, state='readonly', width=10, textvariable=n[1]),
-                      ttk.Combobox(canvas, state='readonly', width=4, textvariable=n[2])]}
+                      ttk.Combobox(canvas, width=4, textvariable=n[2])]}
     date['value'][0]['values'] = days
     date['value'][1]['values'] = MONTHS
     date['value'][2]['values'] = years
     date['value'][0].current(days.index(str(date_selected.dd)))
     date['value'][1].current(date_selected.mm - 1)
-    try:
-        date['value'][2].current(date_selected.yyyy - 1900)
-    except:
-        date['value'][2].current(200)
+    date['value'][2].current(date_selected.yyyy - 1900)
     l += [date['label']]
     c += [date['value']]
     C += [n]
@@ -523,16 +542,26 @@ def generate_event_ui():
 
 def about():
     """Display about the developers"""
+
     popup = tk.Toplevel(root)
     popup.title('About')
-    popup.minsize(640, 420)
+    popup.geometry('865x505')
+    popup.resizable(False, False)
     text = r"""
-   ______      __               __             ___              
-  / ____/___ _/ /__  ____  ____/ /__  _____   /   |  ____  ____ 
- / /   / __ `/ / _ \/ __ \/ __  / _ \/ ___/  / /| | / __ \/ __ \
-/ /___/ /_/ / /  __/ / / / /_/ /  __/ /     / ___ |/ /_/ / /_/ /
-\____/\__,_/_/\___/_/ /_/\__,_/\___/_/     /_/  |_/ .___/ .___/
-                                                 /_/   /_/      
+                            ___________.__                                          
+                            \__    ___/|  |__   ____                                
+                              |    |   |  |  \_/ __ \                               
+                              |    |   |   Y  \  ___/                               
+                              |____|   |___|  /\___  >                              
+                                            \/     \/                               
+_________        .__                     .___                 _____                 
+\_   ___ \_____  |  |   ____   ____    __| _/____ _______    /  _  \ ______ ______  
+/    \  \/\__  \ |  | _/ __ \ /    \  / __ |\__  \\_  __ \  /  /_\  \\____ \\____ \ 
+\     \____/ __ \|  |_\  ___/|   |  \/ /_/ | / __ \|  | \/ /    |    \  |_> >  |_> >
+ \______  (____  /____/\___  >___|  /\____ |(____  /__|    \____|__  /   __/|   __/ 
+        \/     \/          \/     \/      \/     \/                \/|__|   |__|    
+
+
     Calender App v1.00 Beta
     An all in one calender + time + weather application
 
@@ -546,7 +575,9 @@ def about():
     Powered by, PERSPECTILT (2021)
 
     """
-    tk.Label(popup, text=text, font=('Courier New', '12')).pack()
+
+    l = tk.Label(popup, text=text, font=('Courier New', '12'))
+    l.place(x=10, y=0)
     popup.mainloop()
 
 
@@ -560,14 +591,21 @@ events = {}
 #      (yyyy, mm, dd):[ [event_name, tags, occurance, description], [<event2>], [<event3>], [<eventn>] ],
 #      (<some other date>): [ <same as above> ],
 #  }
-if os.path.exists('storage.bin') and os.path.getsize('storage.bin'):
-    with open('storage.bin', 'rb') as file:
-        events = pickle.load(file)
+if os.path.exists('storage.dat') and os.path.getsize('storage.dat'):
+    with open('storage.dat', 'rb') as file:
+        if os.path.exists('KEY.BIN') and os.path.getsize('KEY.BIN'):
+            with open('KEY.BIN', 'rb') as f:
+                if f.read() == hmac.new(b'shared-key', file.read(), hashlib.sha256).digest():
+                    file.seek(0)
+                    events = pickle.load(file)
+                else:
+                    cond = False
 
 # Creating the Graphical User Interface
 root = tk.Tk()
 root.minsize(540, 330)
-root.title('Calender')
+root.geometry('900x640')
+root.title('The Calender App')
 root.bind('<KeyRelease>', keypressed)
 main_frame = tk.Frame(root)
 
@@ -642,4 +680,16 @@ preload_calender()
 
 # Pack the mainframe and start the main loop
 main_frame.pack(expand=True, fill='both')
+
+# Handles KEY corruption/deletion
+if not cond:
+    print('Error! File structure corrupted!')
+    input('Press enter to delete storage... ')
+
+    try:
+        os.remove('storage.dat')
+        os.remove('KEY.BIN')
+    except FileNotFoundError:
+        pass
+
 root.mainloop()
