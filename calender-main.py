@@ -271,7 +271,8 @@ def update_time():
     """Updating the time"""
 
     global TODAY, view
-    t = strftime('%H:%M:%S%p')
+
+    t = strftime('%I:%M:%S%p')
     if t[3:8] == '00:00':
         try:
             TODAY = dt.datetime.today()
