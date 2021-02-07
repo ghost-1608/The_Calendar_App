@@ -1,2 +1,2 @@
 # The_Calendar_App
-Calendar app for CS project
+A calendar app for CS project
