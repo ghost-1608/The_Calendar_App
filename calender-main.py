@@ -684,11 +684,10 @@ main_frame.pack(expand=True, fill='both')
 
 # Handles KEY corruption/deletion
 if not cond:
-    print('Deleted file storage')
-
     try:
         os.remove('storage.dat')
         os.remove('KEY.BIN')
+        print('Deleted file storage')
     except FileNotFoundError:
         pass
 
