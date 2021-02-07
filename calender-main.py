@@ -413,20 +413,20 @@ def generate_event_ui():
         global events
         responses = []
 
-        for i in e:
+        for i in entries:
             responses += [i.get()]
 
-        for i in C:
+        for i in combos:
             for j in i:
                 responses += [j.get()]
 
-        for i in o:
+        for i in dropdowns:
             if i.get() == 'None':
                 responses += ['None']
             else:
                 responses += [eval(i.get())[0]]
 
-        for i in m:
+        for i in multis:
             responses += [i.get('1.0', 'end-1c')]
 
         try:
@@ -458,17 +458,17 @@ def generate_event_ui():
     popup.title('Add event')
     popup.resizable(False, False)
     canvas = tk.Canvas(popup, width=540, height=480, highlightthickness=False)
-    l, e, c, C, d, o, m = [], [], [], [], [], [], []
+    labels, entries, combo_vals, combos, drop_vals, dropdowns, multis = [], [], [], [], [], [], []
     b_x, b_y = 100, 40
     X, Y = 10, 50
 
     event_name = {'label': tk.Label(canvas, text='Event Name: '), 'entry': tk.Entry(canvas)}
-    l += [event_name['label']]
-    e += [event_name['entry']]
+    labels += [event_name['label']]
+    entries += [event_name['entry']]
 
     tags = {'label': tk.Label(canvas, text='Tags: '), 'entry': tk.Entry(canvas)}
-    l += [tags['label']]
-    e += [tags['entry']]
+    labels += [tags['label']]
+    entries += [tags['entry']]
 
     days = [str(i) for i in range(1, DAYS_IN_MONTH[TODAY.month - 1] + (1, 2)[TODAY.month == 2 and is_leap(TODAY.year)])]
     years = [str(i) for i in range(1900, 2101)]
@@ -483,9 +483,9 @@ def generate_event_ui():
     date['value'][0].current(days.index(str(date_selected.dd)))
     date['value'][1].current(date_selected.mm - 1)
     date['value'][2].current(date_selected.yyyy - 1900)
-    l += [date['label']]
-    c += [date['value']]
-    C += [n]
+    labels += [date['label']]
+    combo_vals += [date['value']]
+    combos += [n]
 
     v = tk.StringVar(canvas)
     v.set('None')
@@ -493,28 +493,28 @@ def generate_event_ui():
                      'value': tk.OptionMenu(canvas, v, ['None'], ['Monthly'], ['Yearly'])}  # ['Daily'], ['Weekly'],
     repeat_select['value'].configure(takefocus=True)
 
-    l += [repeat_select['label']]
-    d += [repeat_select['value']]
-    o += [v]
+    labels += [repeat_select['label']]
+    drop_vals += [repeat_select['value']]
+    dropdowns += [v]
 
     multi_textbox = {'label': tk.Label(canvas, text='Description: '),
                      'entry': ScrolledText(canvas, width=50, height=10)}
-    l += [multi_textbox['label']]
-    m += [multi_textbox['entry']]
+    labels += [multi_textbox['label']]
+    multis += [multi_textbox['entry']]
 
     x, y = X, Y
 
-    for i in l:
+    for i in labels:
         i.place(x=x, y=y)
         y += b_y
 
     y = Y; x += b_x
 
-    for i in e:
+    for i in entries:
         i.place(x=x, y=y + 2)
         y += b_y
 
-    for i in c:
+    for i in combo_vals:
         tk.Label(canvas, text='DD:').place(x=x, y=y)
         i[0].place(x=x + 35, y=y)
         tk.Label(canvas, text='M:').place(x=x + 90, y=y)
@@ -523,11 +523,11 @@ def generate_event_ui():
         i[2].place(x=x + 270, y=y)
         y += b_y
 
-    for i in d:
+    for i in drop_vals:
         i.place(x=x - 2, y=y - 5)
         y += b_y
 
-    for i in m:
+    for i in multis:
         i.place(x=x, y=y + 2)
         y += b_y
 
@@ -684,8 +684,7 @@ main_frame.pack(expand=True, fill='both')
 
 # Handles KEY corruption/deletion
 if not cond:
-    print('Error! File structure corrupted!')
-    input('Press enter to delete storage... ')
+    print('Deleted file storage')
 
     try:
         os.remove('storage.dat')
