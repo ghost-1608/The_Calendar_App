@@ -5,7 +5,31 @@
 #  ~ Kavirajar
 #  ~ Lohith Saradhi
 
+import traceback
+import sys
+
+m = []
+
+for i in ['tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac']:
+    try:
+        exec('import ' + i)
+    except ModuleNotFoundError:
+        l = traceback.format_exc().splitlines()[-1]
+        m += [l[l.find("'") + 1: l.find("'", l.find("'") + 1)]]
+
+if m:
+    with open('modules.txt', 'w') as f:
+        for i in m:
+            f.write(i + '\n')
+
+    print('The following module(s) need to be installed:-')
+    print(*m, sep=', ')
+    print('\nEither install the modules manually, or please run the file "modules_installer.py" as an admin')
+    input('Press enter to exit... ')
+    sys.exit(0)
+
 try:
+    import sys
     import tkinter as tk
     import tkinter.ttk as ttk
     from tkinter.scrolledtext import ScrolledText
@@ -18,7 +42,7 @@ try:
     import hashlib
     import hmac
 except ModuleNotFoundError:
-    print('[ERROR] Required libraries are not installed')
+    print('[ERROR]: Required libraries are not installed')
 
 # Global constants
 DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -26,6 +50,12 @@ MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Augus
           'September', 'October', 'November', 'December']
 DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 TODAY = dt.datetime.today()
+CITY = 'chennai'
+
+if not os.path.exists('app'):
+    os.mkdir('app')
+
+os.chdir('app')
 
 # Condition for file health check
 cond = True
@@ -87,7 +117,7 @@ def create_calender(date):
 
     # Creating the required frames
     frame = tk.Frame(main_frame)  # The main frame which shall be returned
-    week_frames = [tk.Frame(frame) for i in range(7)]  # Frame containing 6 rows for weeks + 1 row for days
+    week_frames = [tk.Frame(frame) for _ in range(7)]  # Frame containing 6 rows for weeks + 1 row for days
 
     # Updating DAYS_IN_MONTH for the given year
     if is_leap(yyyy):
@@ -229,7 +259,7 @@ def jump_to_date():
     tk.Label(canvas, text='Select a Date : ', font=('Courier', 16, 'bold')).grid(row=1, column=1, columnspan=3)
     days = [str(i) for i in range(1, DAYS_IN_MONTH[TODAY.month - 1] + (1, 2)[TODAY.month == 2 and is_leap(TODAY.year)])]
     years = [str(i) for i in range(1900, 2101)]
-    n = [tk.StringVar() for i in range(3)]
+    n = [tk.StringVar() for _ in range(3)]
     date = {'label': tk.Label(canvas, text='Dates: '),
             'value': [ttk.Combobox(canvas, state='readonly', width=2, textvariable=n[0]),
                       ttk.Combobox(canvas, state='readonly', width=10, textvariable=n[1]),
@@ -356,7 +386,7 @@ def weather():
         try:
             get_weather(city.lower())
         except:         # Broad exception clause
-            label_w['text'] = "Error: Unable to retrive\nweather info."
+            label_w['text'] = "[Error]: Unable to retrive\nweather info."
 
     def city_select():
         win = tk.Toplevel()
@@ -400,7 +430,7 @@ def weather():
     try:
         get_weather(CITY)
     except:             # Broad exception clause
-        label_w['text'] = "Error: Unable to retrive\nweather info."
+        label_w['text'] = "[Error]: Unable to retrive\nweather info."
     win.mainloop()
 
 
@@ -472,7 +502,7 @@ def generate_event_ui():
 
     days = [str(i) for i in range(1, DAYS_IN_MONTH[TODAY.month - 1] + (1, 2)[TODAY.month == 2 and is_leap(TODAY.year)])]
     years = [str(i) for i in range(1900, 2101)]
-    n = [tk.StringVar() for i in range(3)]
+    n = [tk.StringVar() for _ in range(3)]
     date = {'label': tk.Label(canvas, text='Dates: '),
             'value': [ttk.Combobox(canvas, state='readonly', width=2, textvariable=n[0]),
                       ttk.Combobox(canvas, state='readonly', width=10, textvariable=n[1]),
