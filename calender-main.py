@@ -1,4 +1,4 @@
-#  Computer Science Project - Calender
+#  Computer Science Project - The Calender App
 #  Class 12 - DAV Boys Senior Secondary School, Gopalapuram, Chennai
 #  Created by,
 #  ~ Arka Ghosh - 12108
