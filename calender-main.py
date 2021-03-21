@@ -7,6 +7,7 @@
 
 """The main file for the project 'The Calendar App'"""
 
+# Importing bit
 try:
     import traceback
 except ModuleNotFoundError:
@@ -65,6 +66,8 @@ os.chdir('app')
 
 # Condition for file health check
 cond = True
+
+# Functions
 
 
 def day_of_week(year, month, day):
@@ -617,6 +620,8 @@ _________        .__                     .___                 _____
     l.place(x=10, y=0)
     popup.mainloop()
 
+
+# tkinter bit
 
 view = Date(TODAY.year, TODAY.month, TODAY.day)
 calender_frames = {-1: None, 0: None, 1: None}
