@@ -5,6 +5,8 @@
 #  ~ Kavirajar
 #  ~ Lohith Saradhi
 
+"""The main file for the project 'The Calendar App'"""
+
 import traceback
 import sys
 
