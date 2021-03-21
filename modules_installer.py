@@ -4,7 +4,8 @@ try:
     import subprocess
     import sys
 except ModuleNotFoundError:
-    print('[Fatal Error!]: integral modules missing from the python installation!')
+    print('[Fatal Error!]: integral modules missing from the python installation!\n')
+    input('Press enter to exit... ')
     exit(1)
 
 try:
