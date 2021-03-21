@@ -1,7 +1,11 @@
 """A semi-automatic installer to install the required modules needed to run calendar-main.py"""
 
-import subprocess
-import sys
+try:
+    import subprocess
+    import sys
+except ModuleNotFoundError:
+    print('[Fatal Error!]: integral modules missing from the python installation!')
+    exit(1)
 
 try:
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'modules.txt'])
