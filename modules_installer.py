@@ -1,3 +1,5 @@
+"""A semi-automatic installer to install the required modules needed to run calendar-main.py"""
+
 import subprocess
 import sys
 
