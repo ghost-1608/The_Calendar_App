@@ -16,7 +16,7 @@ except ModuleNotFoundError:
 
 m = []
 
-for i in ['sys', 'tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac']:
+for i in ['sys', 'tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac', 'sdf', 'sadfksdjfl']:
     try:
         exec('import ' + i)
     except ModuleNotFoundError:
@@ -30,7 +30,7 @@ if m:
 
     print('The following module(s) need to be installed:-')
     print(*m, sep=', ')
-    print('\nEither install the modules manually, or please run the file "modules_installer.py" as an admin')
+    print('\nPlease run the file "modules_installer.py" with administrator privileges, or manually install the modules.')
     input('Press enter to exit... ')
     exit()
 
