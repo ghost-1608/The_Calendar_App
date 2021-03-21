@@ -7,12 +7,16 @@
 
 """The main file for the project 'The Calendar App'"""
 
-import traceback
-import sys
+try:
+    import traceback
+except ModuleNotFoundError:
+    print('[Fatal Error]: traceback module missing from the python installation!\n')
+    input('Press enter to exit... ')
+    exit(1)
 
 m = []
 
-for i in ['tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac']:
+for i in ['sys', 'tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac']:
     try:
         exec('import ' + i)
     except ModuleNotFoundError:
@@ -28,7 +32,7 @@ if m:
     print(*m, sep=', ')
     print('\nEither install the modules manually, or please run the file "modules_installer.py" as an admin')
     input('Press enter to exit... ')
-    sys.exit(0)
+    exit()
 
 try:
     import sys
