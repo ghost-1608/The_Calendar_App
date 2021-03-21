@@ -10,6 +10,7 @@ except ModuleNotFoundError:
 
 try:
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'modules.txt'])
+    print('Done!\n')
 except subprocess.CalledProcessError:
     print('Error!\nThere was a problem trying to install the required modules.')
     print('Make sure that modules_installer.py was run with administrator privileges.')
