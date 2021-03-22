@@ -3,26 +3,18 @@
 #  Created by,
 #  ~ Arka Ghosh - 12108
 #  ~ Kavirajar B - 12113
-#  ~ Lohith Saradhi - 121__
+#  ~ Lohith Saradhi - 12112
 
 """The main file for the project 'The Calendar App'"""
 
 # Importing bit
-try:
-    import traceback
-except ModuleNotFoundError:
-    print('[Fatal Error]: traceback module missing from the python installation!\n')
-    input('Press enter to exit... ')
-    exit(1)
-
 m = []
 
 for i in ['sys', 'tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac', 'sdf', 'sadfksdjfl']:
     try:
         exec('import ' + i)
     except ModuleNotFoundError:
-        l = traceback.format_exc().splitlines()[-1]
-        m += [l[l.find("'") + 1: l.find("'", l.find("'") + 1)]]
+        m += [i]
 
 if m:
     with open('modules.txt', 'w') as f:
@@ -434,7 +426,7 @@ def weather():
     label_w = tk.Label(weather, font=('lucida console', 20, "bold"), fg="#607D86", bg='#CBCDCB')
     label_w.place(relheight=1, relwidth=1)
 
-    select_city = tk.Button(label_w, text='select city', command=lambda: city_select())
+    select_city = tk.Button(label_w, text='select city', command=city_select)
     select_city.place(relx=0.8, rely=0.8, relwidth=0.2, relheight=0.2)
     try:
         get_weather(CITY)
@@ -607,8 +599,8 @@ _________        .__                     .___                 _____
 
     +----------------------------------+
     |    Created by,                   |
-    |    ~ Arka 'Ghost' Ghosh          |
-    |    ~ Kavirajar 'Data Overflow'   |
+    |    ~ Arka Ghosh                  |
+    |    ~ Kavirajar                   |
     |    ~ Lohith Saradhi              |
     +----------------------------------+
 
