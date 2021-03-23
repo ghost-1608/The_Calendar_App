@@ -355,7 +355,7 @@ def delete_event(date, index, window=None):
 
 
 def event_select(event=None):
-    """Displays event details in a popup window"""
+    """Displays the event details in a popup window"""
 
     value = event_tree.item(event_tree.selection()[0], 'value')
     popup = tk.Toplevel(root)
@@ -434,7 +434,7 @@ def weather():
 
 
 def generate_event_ui():
-    """ Displays the new-event page"""
+    """Displays the new-event page"""
 
     global TODAY, MONTHS, DAYS_IN_MONTH
 
