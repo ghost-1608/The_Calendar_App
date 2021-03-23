@@ -1,21 +1,20 @@
-#  Computer Science Project - Calender
+#  Computer Science Project - The Calender App
 #  Class 12 - DAV Boys Senior Secondary School, Gopalapuram, Chennai
 #  Created by,
-#  ~ Arka Ghosh
-#  ~ Kavirajar
-#  ~ Lohith Saradhi
+#  ~ Arka Ghosh - 12108
+#  ~ Kavirajar B - 12113
+#  ~ Lohith Saradhi - 12112
 
-import traceback
-import sys
+"""The main file for the project 'The Calendar App'"""
 
+# Importing bit
 m = []
 
-for i in ['tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac']:
+for i in ['sys', 'tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac']:
     try:
         exec('import ' + i)
     except ModuleNotFoundError:
-        l = traceback.format_exc().splitlines()[-1]
-        m += [l[l.find("'") + 1: l.find("'", l.find("'") + 1)]]
+        m += [i]
 
 if m:
     with open('modules.txt', 'w') as f:
@@ -24,9 +23,9 @@ if m:
 
     print('The following module(s) need to be installed:-')
     print(*m, sep=', ')
-    print('\nEither install the modules manually, or please run the file "modules_installer.py" as an admin')
+    print('\nPlease run the file "modules_installer.py" with administrator privileges, or manually install the modules.')
     input('Press enter to exit... ')
-    sys.exit(0)
+    exit()
 
 try:
     import sys
@@ -59,6 +58,8 @@ os.chdir('app')
 
 # Condition for file health check
 cond = True
+
+# Functions
 
 
 def day_of_week(year, month, day):
@@ -425,7 +426,7 @@ def weather():
     label_w = tk.Label(weather, font=('lucida console', 20, "bold"), fg="#607D86", bg='#CBCDCB')
     label_w.place(relheight=1, relwidth=1)
 
-    select_city = tk.Button(label_w, text='select city', command=lambda: city_select())
+    select_city = tk.Button(label_w, text='select city', command=city_select)
     select_city.place(relx=0.8, rely=0.8, relwidth=0.2, relheight=0.2)
     try:
         get_weather(CITY)
@@ -595,8 +596,8 @@ _________        .__                     .___                 _____
     An all in one calender + time + weather application
     +----------------------------------+
     |    Created by,                   |
-    |    ~ Arka 'Ghost' Ghosh          |
-    |    ~ Kavirajar 'Data Overflow'   |
+    |    ~ Arka Ghosh                  |
+    |    ~ Kavirajar                   |
     |    ~ Lohith Saradhi              |
     +----------------------------------+
     Powered by, PERSPECTILT (2021)
@@ -606,6 +607,8 @@ _________        .__                     .___                 _____
     l.place(x=10, y=0)
     popup.mainloop()
 
+
+# tkinter bit
 
 view = Date(TODAY.year, TODAY.month, TODAY.day)
 calender_frames = {-1: None, 0: None, 1: None}
