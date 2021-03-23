@@ -1,4 +1,4 @@
-#  Computer Science Project - The Calender App
+#  Computer Science Project - The Calendar App
 #  Class 12 - DAV Boys Senior Secondary School, Gopalapuram, Chennai
 #  Created by,
 #  ~ Arka Ghosh - 12108
@@ -10,7 +10,7 @@
 # Importing bit
 m = []
 
-for i in ['sys', 'tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac', 'sdf', 'sadfksdjfl']:
+for i in ['sys', 'tkinter', 'datetime', 'time', 'functools', 'os', 'pickle', 'requests', 'hashlib', 'hmac']:
     try:
         exec('import ' + i)
     except ModuleNotFoundError:
@@ -23,7 +23,8 @@ if m:
 
     print('The following module(s) need to be installed:-')
     print(*m, sep=', ')
-    print('\nPlease run the file "modules_installer.py" with administrator privileges, or manually install the modules.')
+    print(
+        '\nPlease run the file "modules_installer.py" with administrator privileges, or manually install the modules.')
     input('Press enter to exit... ')
     exit()
 
@@ -59,6 +60,7 @@ os.chdir('app')
 # Condition for file health check
 cond = True
 
+
 # Functions
 
 
@@ -80,7 +82,7 @@ def is_leap(year):
 
 
 class Date:
-    """A class for storing and manipulation of Calender Dates"""
+    """A class for storing and manipulation of Calendar Dates"""
 
     def __init__(self, yyyy, mm, dd):
         self.dd = dd
@@ -108,7 +110,7 @@ class Date:
         return Date(yyyy, mm, self.dd)
 
 
-def create_calender(date):
+def create_calendar(date):
     """Returns a frame containing all the days of a month for the given date"""
 
     # Extracting values from the date datatype
@@ -134,7 +136,7 @@ def create_calender(date):
     day_no = 0  # iterating day
     first_day = day_of_week(yyyy, mm, 1)  # finding out from which day does the month start
 
-    # Looping through all days in the calender for the given month
+    # Looping through all days in the calendar for the given month
     for week in range(6):
         for day in range(7):
             if day_no == 0:
@@ -168,14 +170,11 @@ def create_calender(date):
                                                                                          fill='both')
                 continue
             if has_event((yyyy, mm, day_no)) and month_no == 1:
-                ttk.Button(week_frames[week + 1], text=disp, state=state, style='CalenderEvent.TButton',
-                           command=partial(set_date_selected, yyyy, mm, day_no)).pack(side='left', expand=True,
-                                                                                      fill='both')
+                ttk.Button(week_frames[week + 1], text=disp, state=state, style='CalendarEvent.TButton', )
             else:
-                ttk.Button(week_frames[week + 1], text=disp, state=state, style='Calender.TButton',
+                ttk.Button(week_frames[week + 1], text=disp, state=state, style='Calendar.TButton',
                            command=partial(set_date_selected, yyyy, mm, day_no)).pack(side='left', expand=True,
                                                                                       fill='both')
-
     for i in range(len(week_frames)):
         week_frames[i].pack(fill='both', expand=True)
 
@@ -198,38 +197,38 @@ def has_event(date):
     return bool(events.get(date, False))
 
 
-def preload_calender():
-    """Preload the calender frame for the preceding and the successive month"""
+def preload_calendar():
+    """Preload the calendar frame for the preceding and the successive month"""
 
-    global calender_frames
-    calender_frames[-1] = create_calender(view.prev_month())
-    calender_frames[1] = create_calender(view.next_month())
+    global calendar_frames
+    calendar_frames[-1] = create_calendar(view.prev_month())
+    calendar_frames[1] = create_calendar(view.next_month())
 
 
 def switch_month(value):
     """Switch month by value; +1 for next month, -1 for previous month, 0 for refresh"""
 
-    global calender_frames, view
-    calender_frames[0].pack_forget()
+    global calendar_frames, view
+    calendar_frames[0].pack_forget()
     if value == 1:
         view = view.next_month()
-        calender_frames[1].pack(side='left', fill='both', expand=True)
-        calender_frames[0] = calender_frames[1]
+        calendar_frames[1].pack(side='left', fill='both', expand=True)
+        calendar_frames[0] = calendar_frames[1]
     elif value == -1:
         view = view.prev_month()
-        calender_frames[-1].pack(side='left', fill='both', expand=True)
-        calender_frames[0] = calender_frames[-1]
+        calendar_frames[-1].pack(side='left', fill='both', expand=True)
+        calendar_frames[0] = calendar_frames[-1]
     else:
-        calender_frames[0] = create_calender(view)
-        calender_frames[0].pack(side='left', fill='both', expand=True)
+        calendar_frames[0] = create_calendar(view)
+        calendar_frames[0].pack(side='left', fill='both', expand=True)
     month_label.config(text=MONTHS[view.mm - 1] + ', ' + str(view.yyyy))
-    preload_calender()
+    preload_calendar()
 
 
 def switch_date(y='2021', m='January', d='1', date=None):
     """Switch to a specified date"""
 
-    global calender_frames, view
+    global calendar_frames, view
     try:
         yyyy = int(y)
         mm = MONTHS.index(m) + 1
@@ -241,11 +240,11 @@ def switch_date(y='2021', m='January', d='1', date=None):
         view = date
     else:
         view = Date(yyyy, mm, dd)
-    calender_frames[0].pack_forget()
-    calender_frames[0] = create_calender(view)
+    calendar_frames[0].pack_forget()
+    calendar_frames[0] = create_calendar(view)
     month_label.config(text=MONTHS[view.mm - 1] + ', ' + str(view.yyyy))
-    calender_frames[0].pack(side='left', fill='both', expand=True)
-    preload_calender()
+    calendar_frames[0].pack(side='left', fill='both', expand=True)
+    preload_calendar()
 
 
 def jump_to_date():
@@ -309,7 +308,7 @@ def update_time():
             TODAY = dt.datetime.today()
             view = Date(TODAY.year, TODAY.month, TODAY.day)
             switch_month(0)
-        except:                         # Can't find type of exceptions that could be raised
+        except:  # Can't find type of exceptions that could be raised
             pass
     label_t['text'] = t
     label_t.after(1000, update_time)
@@ -352,7 +351,7 @@ def delete_event(date, index, window=None):
                 f.write(hmac.new(b'shared-key', file.read(), hashlib.sha256).digest())
         switch_month(0)
         window.destroy()
-    except:             # tkinter errors can't be handled regularly
+    except:  # tkinter errors can't be handled regularly
         pass
 
 
@@ -386,7 +385,7 @@ def weather():
         window.title('Change city (current: ' + city.capitalize() + ')')
         try:
             get_weather(city.lower())
-        except:         # Broad exception clause
+        except:  # Broad exception clause
             label_w['text'] = "[Error]: Unable to retrive\nweather info."
 
     def city_select():
@@ -430,7 +429,7 @@ def weather():
     select_city.place(relx=0.8, rely=0.8, relwidth=0.2, relheight=0.2)
     try:
         get_weather(CITY)
-    except:             # Broad exception clause
+    except:  # Broad exception clause
         label_w['text'] = "[Error]: Unable to retrive\nweather info."
     win.mainloop()
 
@@ -539,7 +538,8 @@ def generate_event_ui():
         i.place(x=x, y=y)
         y += b_y
 
-    y = Y; x += b_x
+    y = Y;
+    x += b_x
 
     for i in entries:
         i.place(x=x, y=y + 2)
@@ -594,8 +594,8 @@ _________        .__                     .___                 _____
         \/     \/          \/     \/      \/     \/                \/|__|   |__|    
 
 
-    Calender App v1.00 Beta
-    An all in one calender + time + weather application
+    Calendar App v1.00 Beta
+    An all in one calendar + time + weather application
 
     +----------------------------------+
     |    Created by,                   |
@@ -616,7 +616,7 @@ _________        .__                     .___                 _____
 # tkinter bit
 
 view = Date(TODAY.year, TODAY.month, TODAY.day)
-calender_frames = {-1: None, 0: None, 1: None}
+calendar_frames = {-1: None, 0: None, 1: None}
 date_selected = Date(TODAY.year, TODAY.month, TODAY.day)
 
 events = {}
@@ -639,13 +639,13 @@ if os.path.exists('storage.dat') and os.path.getsize('storage.dat'):
 root = tk.Tk()
 root.minsize(540, 330)
 root.geometry('900x640')
-root.title('The Calender App')
+root.title('The Calendar App')
 root.bind('<KeyRelease>', keypressed)
 main_frame = tk.Frame(root)
 
 style = ttk.Style()
-style.configure('Calender.TButton', font=('Courier', 12), width=3, height=1)
-style.configure('CalenderEvent.TButton', font=('Courier', 12, 'underline'), width=3, height=1)
+style.configure('Calendar.TButton', font=('Courier', 12), width=3, height=1)
+style.configure('CalendarEvent.TButton', font=('Courier', 12, 'underline'), width=3, height=1)
 style.configure('Treeview.Heading', font=(None, 10, 'bold'))
 
 # Setting up the time UI
@@ -707,10 +707,10 @@ nav_frame.pack(side='right')
 month_frame.pack(side='top', fill='x')
 event_frame.pack(side='right', fill='both')
 
-# Creating the calender
-calender_frames[0] = create_calender(view)
-calender_frames[0].pack(side='left', fill='both', expand=True)
-preload_calender()
+# Creating the calendar
+calendar_frames[0] = create_calendar(view)
+calendar_frames[0].pack(side='left', fill='both', expand=True)
+preload_calendar()
 
 # Pack the mainframe and start the main loop
 main_frame.pack(expand=True, fill='both')
