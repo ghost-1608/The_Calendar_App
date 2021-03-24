@@ -71,7 +71,7 @@ def day_of_week(year, month, day):
 
 
 def is_leap(year):
-    """Check if given year is a leap year or not"""
+    """Checks if given year is a leap year or not"""
 
     if year % 100:
         return not (year % 4)
@@ -80,7 +80,7 @@ def is_leap(year):
 
 
 class Date:
-    """A class for storing and manipulation of Calendar Dates"""
+    """Class for storing and manipulation of the calendar dates"""
 
     def __init__(self, yyyy, mm, dd):
         self.dd = dd
@@ -109,7 +109,7 @@ class Date:
 
 
 def create_calendar(date):
-    """Returns a frame containing all the days of a month for the given date"""
+    """Returns a frame containing all the days of the month for the given date"""
 
     # Extracting values from the date datatype
     yyyy = date.yyyy
@@ -183,7 +183,7 @@ def create_calendar(date):
 
 
 def has_event(date):
-    """Check if a given date has an event"""
+    """Checks if the given date has an event"""
 
     for e in events.keys():
         if e[2] == date[2]:
@@ -199,7 +199,7 @@ def has_event(date):
 
 
 def preload_calendar():
-    """Preload the calendar frame for the preceding and the successive month"""
+    """Preloads the calendar frame for the previous and the subsequent month"""
 
     global calendar_frames
     calendar_frames[-1] = create_calendar(view.prev_month())
@@ -207,7 +207,7 @@ def preload_calendar():
 
 
 def switch_month(value):
-    """Switch month by value; +1 for next month, -1 for previous month, 0 for refresh"""
+    """Switches month by a value; +1 for next month, -1 for previous month, 0 for refresh"""
 
     global calendar_frames, view
     calendar_frames[0].pack_forget()
@@ -227,7 +227,7 @@ def switch_month(value):
 
 
 def switch_date(y='2021', m='January', d='1', date=None):
-    """Switch to a specified date"""
+    """Switches to a specified date"""
 
     global calendar_frames, view
     try:
@@ -249,7 +249,7 @@ def switch_date(y='2021', m='January', d='1', date=None):
 
 
 def jump_to_date():
-    """Display the jump to date window"""
+    """Displays the jump-to-date window"""
 
     global DAYS_IN_MONTH, MONTHS
 
@@ -281,7 +281,7 @@ def jump_to_date():
 
 
 def set_date_selected(yyyy, mm, dd):
-    """Set the current date to be viewed"""
+    """Sets the current date for viewing"""
 
     global date_selected
     date_selected = Date(yyyy, mm, dd)
@@ -299,7 +299,7 @@ def keypressed(event):
 
 
 def update_time():
-    """Updating the time"""
+    """Updates the time"""
 
     global TODAY, view
 
@@ -309,14 +309,14 @@ def update_time():
             TODAY = dt.datetime.today()
             view = Date(TODAY.year, TODAY.month, TODAY.day)
             switch_month(0)
-        except:                         # Can't find type of exceptions that could be raised
+        except:                         # Broad exception clause
             pass
     label_t['text'] = t
     label_t.after(1000, update_time)
 
 
 def display_events():
-    """Display events onto the Treeview"""
+    """Displays the events in the Treeview"""
 
     yyyy = date_selected.yyyy
     mm = date_selected.mm
@@ -338,7 +338,7 @@ def display_events():
 
 
 def delete_event(date, index, window=None):
-    """Delete an event of the specified date and index"""
+    """Deletes the event of the specified date and index"""
 
     global events
     try:
@@ -352,12 +352,12 @@ def delete_event(date, index, window=None):
                 f.write(hmac.new(b'shared-key', file.read(), hashlib.sha256).digest())
         switch_month(0)
         window.destroy()
-    except:             # tkinter errors can't be handled regularly
+    except:             # Broad Exception clause
         pass
 
 
 def event_select(event=None):
-    """Display event details in a popup window"""
+    """Displays the event details in a popup window"""
 
     value = event_tree.item(event_tree.selection()[0], 'value')
     popup = tk.Toplevel(root)
@@ -376,7 +376,7 @@ def event_select(event=None):
 
 
 def weather():
-    """Display the live weather forecast"""
+    """Displays the live weather forecast"""
 
     B = 200
     L = 500
@@ -387,7 +387,7 @@ def weather():
         try:
             get_weather(city.lower())
         except:         # Broad exception clause
-            label_w['text'] = "[Error]: Unable to retrive\nweather info."
+            label_w['text'] = "[Error]: Unable to retrive\nthe weather info."
 
     def city_select():
         win = tk.Toplevel()
@@ -431,12 +431,12 @@ def weather():
     try:
         get_weather(CITY)
     except:             # Broad exception clause
-        label_w['text'] = "[Error]: Unable to retrive\nweather info."
+        label_w['text'] = "[Error]: Unable to retrive\nthe weather info."
     win.mainloop()
 
 
 def generate_event_ui():
-    """ Display the new event page"""
+    """Displays the new-event page"""
 
     global TODAY, MONTHS, DAYS_IN_MONTH
 
@@ -573,7 +573,7 @@ def generate_event_ui():
 
 
 def about():
-    """Display about the developers"""
+    """Displays details about the developers"""
 
     popup = tk.Toplevel(root)
     popup.title('About')
@@ -592,15 +592,14 @@ _________        .__                     .___                 _____
 \     \____/ __ \|  |_\  ___/|   |  \/ /_/ | / __ \|  | \/ /    |    \  |_> >  |_> >
  \______  (____  /____/\___  >___|  /\____ |(____  /__|    \____|__  /   __/|   __/ 
         \/     \/          \/     \/      \/     \/                \/|__|   |__|    
-    Calendar App v1.00 Beta
-    An all in one calendar + time + weather application
+    The Calendar App v1.00
+    An all-in-one calendar + time + weather application
     +----------------------------------+
     |    Created by,                   |
     |    ~ Arka Ghosh                  |
     |    ~ Kavirajar                   |
     |    ~ Lohith Saradhi              |
     +----------------------------------+
-    Powered by, PERSPECTILT (2021)
     """
 
     l = tk.Label(popup, text=text, font=('Courier New', '12'))
@@ -617,7 +616,7 @@ date_selected = Date(TODAY.year, TODAY.month, TODAY.day)
 events = {}
 #  Structure for events is
 #  {
-#      (yyyy, mm, dd):[ [event_name, tags, occurance, description], [<event2>], [<event3>], [<eventn>] ],
+#      (yyyy, mm, dd):[ [event_name, tags, occurrence, description], [<event2>], [<event3>], [<eventn>] ],
 #      (<some other date>): [ <same as above> ],
 #  }
 if os.path.exists('storage.dat') and os.path.getsize('storage.dat'):
@@ -630,7 +629,7 @@ if os.path.exists('storage.dat') and os.path.getsize('storage.dat'):
                 else:
                     cond = False
 
-# Creating the Graphical User Interface
+# Creating the GUI
 root = tk.Tk()
 root.minsize(540, 330)
 root.geometry('900x640')
@@ -692,7 +691,7 @@ menubar.add_cascade(label="Help", menu=helpmenu)
 
 root.config(menu=menubar)
 
-# Packing them all up
+# Packing all of them up
 label_t.pack()
 time_frame.pack(side='top')
 month_label.pack(side='left', padx=(3, 10), pady=(5, 1))
@@ -707,7 +706,7 @@ calendar_frames[0] = create_calendar(view)
 calendar_frames[0].pack(side='left', fill='both', expand=True)
 preload_calendar()
 
-# Pack the mainframe and start the main loop
+# Packing the mainframe and starting the main loop
 main_frame.pack(expand=True, fill='both')
 
 # Handles KEY corruption/deletion
